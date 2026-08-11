@@ -1,12 +1,12 @@
 import os
 import aiofiles
-from fastapi import FastAPI, APIRouter, Depends, UploadFile, status
+from fastapi import FastAPI, APIRouter, Depends, UploadFile, status, Request
 from fastapi.responses import JSONResponse
 
 from helpers.config import get_settings, Settings
 from controllers import FileController
+from rag.ingestion.pipeline import run_ingestion
 from enums.enums import ResponseSignal
-
 from loguru import logger
 
 data_router = APIRouter(
@@ -15,7 +15,7 @@ data_router = APIRouter(
 )
 
 @data_router.post("/upload/")
-async def ingest_data(file: UploadFile,
+async def ingest_data(request: Request, file: UploadFile,
                       app_settings: Settings = Depends(get_settings)):
         
     
@@ -51,9 +51,28 @@ async def ingest_data(file: UploadFile,
             }
         )
 
+    logger.info(f"File uploaded successfully: {file.filename} -> {file_path}")
+
+    # Run ingestion pipeline
+    try:
+        num_chunks = run_ingestion(
+            file_path=file_path,
+            vectorstore=request.app.vectorstore,
+            config=app_settings
+        )
+    except Exception as e:
+        logger.error(f"Error during ingestion: {e}")
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            content={
+                "signal": ResponseSignal.FILE_INGEST_FAILED.value
+            }
+        )
+
     return JSONResponse(
             content={
-                "signal": ResponseSignal.FILE_UPLOAD_SUCCESS.value,
-                "file_id": file_id
+                "signal": ResponseSignal.FILE_INGEST_SUCCESS.value,
+                "file_id": file_id,
+                "num_chunks": num_chunks,
             }
         )

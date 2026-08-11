@@ -22,8 +22,6 @@ class Settings(BaseSettings):
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
     LOG_LEVEL: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
 
-    # ---------------- INFRASTRUCTURE & NETWORK ----------------
-    FRONTEND_ORIGIN: str = "http://localhost:3000"
 
     # ---------------- REUSABLE HELPERS ----------------
     @property

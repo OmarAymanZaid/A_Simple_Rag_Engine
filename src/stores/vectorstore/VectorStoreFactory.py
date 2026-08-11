@@ -3,8 +3,8 @@ from langchain_core.vectorstores import VectorStore
 from langchain_chroma import Chroma
 from loguru import logger
 
-from ...helpers.config import Settings
-from ...enums.enums import VectorStoreProvider
+from helpers.config import Settings
+from enums.enums import VectorStoreProvider
 
 
 class VectorStoreFactory:

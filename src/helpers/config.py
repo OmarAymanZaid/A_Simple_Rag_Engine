@@ -40,6 +40,10 @@ class Settings(BaseSettings):
 
     GOOGLE_API_KEY: str | None = None
 
+    # ---------------- VECTORSTORE SPECS ----------------
+    VECTORSTORE_PROVIDER: str = "CHROMA"
+    VECTORSTORE_COLLECTION_NAME: str = "rag_knowledge_base"
+    VECTORSTORE_PERSIST_DIR: str = "src/assets/vectorstores"
 
     # ---------------- REUSABLE HELPERS ----------------
     @property

@@ -4,7 +4,7 @@ from loguru import logger
 
 from .loaders import load_document
 from .splitters import get_text_splitter
-from ...helpers.config import Settings
+from helpers.config import Settings
 
 
 def run_ingestion(

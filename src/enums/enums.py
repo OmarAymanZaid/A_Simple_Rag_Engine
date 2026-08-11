@@ -16,6 +16,8 @@ class ResponseSignal(str, Enum):
 # Model enums
 class ModelProvider(str, Enum):
     OPENAI = "OPENAI"
+    GOOGLE = "GOOGLE"
+
 
 class ModelTier(str, Enum):
     FAST = "fast"

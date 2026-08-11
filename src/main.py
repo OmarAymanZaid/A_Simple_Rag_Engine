@@ -1,0 +1,80 @@
+import sys
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from loguru import logger
+
+from helpers.config import get_settings
+from utils.logging import configure_logging
+from routes import router
+
+# Load the cached environment configuration settings
+settings = get_settings()
+
+# ==========================================
+# THE APPLICATION LIFESPAN
+# ==========================================
+@asynccontextmanager
+async def application_lifespan(app: FastAPI) -> AsyncIterator[None]:
+    """Manages the explicit application startup and shutdown hooks."""
+    # ---------------- STARTUP PHASE ----------------
+    # 1. Initialize logging with dynamic configuration settings
+    configure_logging(level=settings.LOG_LEVEL)
+    logger.info(f"Starting {settings.APP_NAME} in [{settings.ENVIRONMENT}] mode...")
+    
+    # 2. Reusable global resources attach to app instance here
+    # (e.g., app.db_client = DatabaseClient())
+    logger.info("Application infrastructure initialized successfully.")
+    
+    yield  # <--- THE CORE OPERATION LOOP HAPPENS HERE
+    
+    # --------------- SHUTDOWN PHASE ---------------
+    logger.info("Initiating application shutdown sequence...")
+    # 3. Graceful resource cleanup execution goes here
+    # (e.g., await app.db_client.disconnect())
+    logger.info("Application safely stopped. Goodbye!")
+
+
+# ==========================================
+# THE APPLICATION FACTORY
+# ==========================================
+def create_app() -> FastAPI:
+    """Configures and builds the primary FastAPI application instance."""
+    
+    # 1. Instantiate the app using dynamic config properties
+    app = FastAPI(
+        title=settings.APP_NAME,
+        version=settings.APP_VERSION,
+        lifespan=application_lifespan,
+    )
+
+    # 2. Cross-Origin Resource Sharing (CORS) Middleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[settings.FRONTEND_ORIGIN] if not settings.is_local else ["*"],
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["*"],
+    )
+
+    # 3. Modular Router Integrations
+    # (e.g., app.include_router(routes.file_handling.router))
+    app.include_router(router)
+    
+    # 4. Built-in Base Operational Endpoints
+    @app.get("/", status_code=200, include_in_schema=False)
+    async def root_ping() -> dict[str, str]:
+        """Simple application heartbeat ping response."""
+        return {"service": app.title, "status": "online", "version": app.version}
+
+    @app.get("/healthz", status_code=200, tags=["Infrastructure"])
+    async def system_health_check() -> dict[str, str]:
+        """Liveness/readiness probe context for monitoring stacks."""
+        return {"status": "healthy"}
+
+    return app
+
+# Instantiate the global application instance
+app = create_app()

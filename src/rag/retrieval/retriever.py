@@ -1,7 +1,7 @@
 from langchain_core.vectorstores import VectorStore, VectorStoreRetriever
 from loguru import logger
 
-from ...helpers.config import Settings
+from helpers.config import Settings
 
 
 def build_retriever(

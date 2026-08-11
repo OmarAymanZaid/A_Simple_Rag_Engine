@@ -27,6 +27,17 @@ class Settings(BaseSettings):
     FILE_MAX_SIZE: int = 10  # In MB
     FILE_DEFAULT_CHUNK_SIZE: int = 512000  # 512KB
 
+    # ---------------- LLM SPECS ----------------
+    GENERATION_PROVIDER: str = "OPENAI"
+    GENERATION_MODEL_NAME: str = "gpt-4o-mini"
+    GENERATION_DEFAULT_MAX_TOKENS: int = 200
+    GENERATION_DEFAULT_TEMPERATURE: float = 0.1
+    INPUT_DEFAULT_MAX_CHARACTERS: int = 1024
+
+    EMBEDDING_PROVIDER: str = "COHERE"
+    EMBEDDING_MODEL_NAME: str = "embed-multilingual-light-v3.0"
+    EMBEDDING_MODEL_SIZE: int = 384
+
     # ---------------- REUSABLE HELPERS ----------------
     @property
     def is_local(self) -> bool:

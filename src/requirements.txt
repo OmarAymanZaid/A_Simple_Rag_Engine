@@ -6,3 +6,5 @@ loguru==0.7.3
 
 python-multipart==0.0.32
 aiofiles==23.2.1
+
+langchain-google-genai==4.3.2

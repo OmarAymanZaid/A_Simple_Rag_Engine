@@ -28,7 +28,7 @@ async def application_lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # (e.g., app.db_client = DatabaseClient())
     logger.info("Application infrastructure initialized successfully.")
     
-    yield  # <--- THE CORE OPERATION LOOP HAPPENS HERE
+    yield
     
     # --------------- SHUTDOWN PHASE ---------------
     logger.info("Initiating application shutdown sequence...")
@@ -48,15 +48,6 @@ def create_app() -> FastAPI:
         title=settings.APP_NAME,
         version=settings.APP_VERSION,
         lifespan=application_lifespan,
-    )
-
-    # 2. Cross-Origin Resource Sharing (CORS) Middleware
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[settings.FRONTEND_ORIGIN] if not settings.is_local else ["*"],
-        allow_credentials=True,
-        allow_methods=["GET", "POST", "PUT", "DELETE"],
-        allow_headers=["*"],
     )
 
     # 3. Modular Router Integrations

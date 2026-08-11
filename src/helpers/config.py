@@ -38,6 +38,9 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL_NAME: str = "embed-multilingual-light-v3.0"
     EMBEDDING_MODEL_SIZE: int = 384
 
+    GOOGLE_API_KEY: str | None = None
+
+
     # ---------------- REUSABLE HELPERS ----------------
     @property
     def is_local(self) -> bool:

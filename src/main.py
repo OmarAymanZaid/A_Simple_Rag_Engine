@@ -8,7 +8,7 @@ from loguru import logger
 
 from helpers.config import get_settings
 from utils.logging import configure_logging
-from routes import router
+from routes import router_boilerplate
 
 # Load the cached environment configuration settings
 settings = get_settings()
@@ -52,7 +52,7 @@ def create_app() -> FastAPI:
 
     # 3. Modular Router Integrations
     # (e.g., app.include_router(routes.file_handling.router))
-    app.include_router(router)
+    app.include_router(router_boilerplate.router)
     
     # 4. Built-in Base Operational Endpoints
     @app.get("/", status_code=200, include_in_schema=False)

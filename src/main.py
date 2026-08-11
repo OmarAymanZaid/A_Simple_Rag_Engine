@@ -10,6 +10,13 @@ from helpers.config import get_settings
 from utils.logging import configure_logging
 from routes import data
 
+from rag.generation.chain import build_rag_chain
+from rag.ingestion.pipeline import run_ingestion
+from rag.retrieval.retriever import build_retriever
+from helpers.config import Settings
+from stores.llm.LLMFactory import LLMProviderFactory
+from stores.vectorstore.VectorStoreFactory import VectorStoreFactory
+
 # Load the cached environment configuration settings
 settings = get_settings()
 
@@ -27,9 +34,15 @@ async def application_lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     
     # Reusable global resources attach to app instance here
     # -----------------------------------------------------
-    # (e.g., app.db_client = DatabaseClient())
-    # (e.g., app.db_client = DatabaseClient())
-    # (e.g., app.db_client = DatabaseClient())
+    # Initialize LLM and Embedding Models
+    app.llm_factory = LLMProviderFactory(settings)
+    app.llm = app.llm_factory.create_llm()
+    app.embedding_model = app.llm_factory.create_embedding_model()
+
+    app.vectorstore_factory = VectorStoreFactory(settings)
+    app.vectorstore = app.vectorstore_factory.create_vectorstore(
+        embedding_model=app.embedding_model
+    )
     
     logger.info("Application infrastructure initialized successfully.")
     
@@ -63,7 +76,7 @@ def create_app() -> FastAPI:
 
     # Modular Router Integrations
     # (e.g., app.include_router(routes.file_handling.router))
-    app.include_router(data.router)
+    app.include_router(data.data_router)
     
     # Built-in Base Operational Endpoints
     @app.get("/", status_code=200, include_in_schema=False)

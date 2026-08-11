@@ -11,3 +11,12 @@ class ResponseSignal(str, Enum):
     FILE_UPLOAD_FAILED = "file_upload_failed"
     FILE_INGEST_SUCCESS = "file_ingest_success"
     FIle_INGEST_FAILED = "file_ingest_failed"
+
+
+# Model enums
+class ModelProvider(str, Enum):
+    OPENAI = "OPENAI"
+
+class ModelTier(str, Enum):
+    FAST = "fast"
+    REASONING = "reasoning"

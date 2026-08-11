@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        case_sensitive=False,  # Allows .env keys to be uppercase or lowercase
-        extra="ignore",        # Ignores extraneous system env variables quietly
+        case_sensitive=False,
+        extra="ignore",
     )
 
     # ---------------- CORE SERVICE APP STATE ----------------

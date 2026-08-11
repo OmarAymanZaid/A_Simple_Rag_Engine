@@ -1,6 +1,6 @@
 import sys
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
+from typing import AsyncGenerator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,7 +17,7 @@ settings = get_settings()
 # THE APPLICATION LIFESPAN
 # ==========================================
 @asynccontextmanager
-async def application_lifespan(app: FastAPI) -> AsyncIterator[None]:
+async def application_lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Manages the explicit application startup and shutdown hooks."""
     # ---------------- STARTUP PHASE ----------------
     # 1. Initialize logging with dynamic configuration settings

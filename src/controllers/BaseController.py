@@ -12,7 +12,8 @@ class BaseController:
         self.base_dir = os.path.dirname( os.path.dirname(__file__) )
         self.files_dir = os.path.join(
             self.base_dir,
-            "assets/files"
+            "assets",
+            "files"
         )
 
         self.database_dir = os.path.join(

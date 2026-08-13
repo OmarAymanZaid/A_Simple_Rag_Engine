@@ -45,6 +45,14 @@ class Settings(BaseSettings):
     VECTORSTORE_COLLECTION_NAME: str = "rag_knowledge_base"
     VECTORSTORE_PERSIST_DIR: str = "src/assets/vectorstores"
 
+    # ---------------- RAG SPECS ----------------
+    CHUNK_SIZE: int = 500
+    CHUNK_OVERLAP: int = 50
+
+    # Retrieval Specs
+    RETRIEVAL_SEARCH_TYPE: str = "similarity"
+    RETRIEVAL_K: int = 4
+
     # ---------------- REUSABLE HELPERS ----------------
     @property
     def is_local(self) -> bool:

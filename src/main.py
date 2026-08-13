@@ -8,6 +8,7 @@ from loguru import logger
 
 from helpers.config import get_settings
 from utils.logging import configure_logging
+from utils.utils import register_langserve_routes
 from routes import data
 
 from rag.generation.chain import build_rag_chain
@@ -43,6 +44,17 @@ async def application_lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     app.vectorstore = app.vectorstore_factory.create_vectorstore(
         embedding_model=app.embedding_model
     )
+
+    app.retriever = build_retriever(
+        vectorstore=app.vectorstore,
+        config=settings,
+        search_type=settings.RETRIEVAL_SEARCH_TYPE,
+        k=settings.RETRIEVAL_K
+    )
+
+    # chains and langserve routes
+    app.rag_chain = build_rag_chain(llm=app.llm, retriever=app.retriever)
+    register_langserve_routes(app=app, rag_chain=app.rag_chain)
     
     logger.info("Application infrastructure initialized successfully.")
     

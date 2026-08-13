@@ -10,7 +10,7 @@ class ResponseSignal(str, Enum):
     FILE_UPLOAD_SUCCESS = "file_upload_success"
     FILE_UPLOAD_FAILED = "file_upload_failed"
     FILE_INGEST_SUCCESS = "file_ingest_success"
-    FIle_INGEST_FAILED = "file_ingest_failed"
+    FILE_INGEST_FAILED = "file_ingest_failed"
 
 
 # Model enums

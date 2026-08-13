@@ -9,3 +9,6 @@ aiofiles==23.2.1
 
 langchain-google-genai==4.3.2
 langchain-chroma==1.1.0
+
+langserve[server]==0.3.3
+
